@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css?family=JetBrains Mono');
+
+:root {
+  --bg: #5f4b8b;
+  --fg: #ffffff;
+  --op: 0.7;
+  --secondaryFg: #b3b3b3;
+  --containerBg: #282828;
+  --searchBg: var(--containerBg);
+  --fontFamily: 'JetBrains Mono', monospace;
+}
+
+body {
+  background-size:     cover;
+  background-repeat:   no-repeat;
+  background-position: center center;
+  margin: 0px;
+}
+
+#root {
+  /* Make sure #root takes up the whole space */
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+/*
+.container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+*/
+
+#clock {
+  font-family: sans-serif;
+  font-size: 3.5rem;
+  font-weight: 600;
+  font-family: var(--fontFamily);
+  color: #d4be98;
+  margin-bottom: 0.25em;
+}
+
+.search {
+  width: 100%;
+  height: 100vh;
+  background-color: var(--searchBg);
+  display: none;
+  position: relative;
+  box-sizing: border-box;
+  flex-direction: column;
+  align-items: center;
+  justify-content: top;
+}
+
+.search-field {
+  position: absolute;
+  width: 40%;
+  height: 55px;
+  top: 20%;
+  left: 30%;
+  border-radius: 10px;
+  padding: 0.75em 1em;
+  box-sizing: border-box;
+  background-color: #2f2f2f;
+  border: 1px solid var(--searchBg);
+  font-family: var(--fontFamily);
+  font-size: 1.5rem;
+  color: var(--secondaryFg);
+  outline: none;
+  margin-bottom: 1em;
+  text-align: center;
+}
+
+.weather-container {
+  width: 30%;
+  opacity: var(--op);
+  background-color: var(--containerBg);
+  padding: 1em;
+  border-radius: 3px;
+  font-family: var(--fontFamily);
+  color: var(--fg);
+  text-align: center;
+}
+
+.inline {
+  display: inline-block;
+}
+
+#bookmark-container {
+  display: flex;
+  opacity: var(--op);
+  flex-direction: row;
+  justify-content: center;
+  width: 65%;
+  margin: 1em 0em;
+}
+
+@media only screen and (max-width: 960px) {
+  #root {
+    height: auto;
+  }
+  #clock {
+    margin-top: 1em;
+  }
+  #root > #bookmark-container {
+    flex-direction: column;
+    width: 60%;
+  }
+  #bookmark-container > .bookmark-set {
+    width: auto;
+    margin: 1em 0em;
+  }
+}
+
+.bookmark-set {
+  padding: 1em;
+  background-color: var(--containerBg);
+  border-radius: 3px;
+  font-family: var(--fontFamily);
+  font-size: 0.85rem;
+  width: 25%;
+  height: 18em;
+  margin: 0em 0.5em;
+  box-sizing: border-box;
+}
+
+.bookmark-inner-container {
+  overflow-y: scroll;
+  height: 80%;
+  vertical-align: top;
+  padding-right: 6px;
+  box-sizing: border-box;
+  scrollbar-width: none;
+}
+
+.bookmark-inner-container::-webkit-scrollbar {
+  display: none;
+}
+
+.bookmark-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--fg);
+  margin: 0em 0em 0.35em 0em;
+}
+.bookmark {
+  text-decoration: none;
+  color: var(--secondaryFg);
+  display: block;
+  margin: 0.5em 0em;
+}
+.bookmark:hover {
+  color: var(--fg);
+}

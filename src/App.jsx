@@ -95,9 +95,72 @@ function Weather() {
   )
 }
 
+function Search({ searchStatus, setSearchStatus }) {
+  const [searchVal, setSearchVal] = useState('');
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const key = e.code;
+      console.log(key)
+      const searchUrl = "https://google.com/search?q=";
+
+      if (key == 'Space' && !searchStatus) {
+        setSearchStatus(true);
+      } else if (key == 'Escape' && searchStatus) {
+        setSearchStatus(false);
+        setSearchVal('');
+      } else if (key == 'Enter' && searchStatus && searchVal !== '') {
+        document.location.href = searchUrl + searchVal
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown, true);
+  }, [searchStatus, setSearchStatus, searchVal, setSearchVal]);
+
+  if (searchStatus) {
+    return (<div id="search">
+      <input
+        id="search-field"
+        autoFocus
+        value={searchVal}
+        type="text"
+        name="search-field"
+        onBlur={() => {
+          setSearchStatus(false);
+          setSearchVal('');
+        }}
+        onChange={(e) => setSearchVal(e.target.value)}
+      />
+    </div>)
+  }
+
+  return null;
+}
+
 function App() {
+  const [searchStatus, setSearchStatus] = useState(false)
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const key = e.code;
+      if (key == 'Space' && !searchStatus) {
+        setSearchStatus(true);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown, true);
+  }, [searchStatus, setSearchStatus]);
 
   setBg();
+
+  if (searchStatus) {
+    return (
+      <Search
+        searchStatus={searchStatus}
+        setSearchStatus={setSearchStatus}
+      />
+    )
+  }
 
   return (
     <>

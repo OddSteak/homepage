@@ -95,18 +95,39 @@ function Weather() {
   )
 }
 
+function SearchResults({ books, searchVal }) {
+  const buf = []
+
+  for (let set of books) {
+    for (let link of set.links) {
+      const indexText = link.name + link.url
+      const res = indexText.toLowerCase().indexOf(searchVal.toLowerCase())
+      if (res != -1) {
+        buf.push(
+          <li key={link.url} id="links">
+            <a href={link.url}>{link.name}</a>
+          </li>
+        )
+      }
+    }
+  }
+
+  return (
+    <ol className="search-results">
+      {buf}
+    </ol>
+  )
+}
+
 function Search({ searchStatus, setSearchStatus }) {
   const [searchVal, setSearchVal] = useState('');
 
   useEffect(() => {
     const handleKeyDown = (e) => {
       const key = e.code;
-      console.log(key)
       const searchUrl = "https://google.com/search?q=";
 
-      if (key == 'Space' && !searchStatus) {
-        setSearchStatus(true);
-      } else if (key == 'Escape' && searchStatus) {
+      if (key == 'Escape' && searchStatus) {
         setSearchStatus(false);
         setSearchVal('');
       } else if (key == 'Enter' && searchStatus && searchVal !== '') {
@@ -114,24 +135,27 @@ function Search({ searchStatus, setSearchStatus }) {
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown, true);
+    document.addEventListener('keydown', handleKeyDown, false);
   }, [searchStatus, setSearchStatus, searchVal, setSearchVal]);
 
   if (searchStatus) {
-    return (<div id="search">
-      <input
-        id="search-field"
-        autoFocus
-        value={searchVal}
-        type="text"
-        name="search-field"
-        onBlur={() => {
-          setSearchStatus(false);
-          setSearchVal('');
-        }}
-        onChange={(e) => setSearchVal(e.target.value)}
-      />
-    </div>)
+    return (
+      <div id="search">
+        <input
+          id="search-field"
+          autoFocus
+          value={searchVal}
+          type="text"
+          name="search-field"
+          onBlur={() => {
+            setSearchStatus(false);
+            setSearchVal('');
+          }}
+          onChange={(e) => setSearchVal(e.target.value)}
+        />
+        <SearchResults books={bookmarks} searchVal={searchVal} />
+      </div>
+    )
   }
 
   return null;
@@ -141,14 +165,15 @@ function App() {
   const [searchStatus, setSearchStatus] = useState(false)
 
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyPress = (e) => {
       const key = e.code;
       if (key == 'Space' && !searchStatus) {
         setSearchStatus(true);
+        e.preventDefault();
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown, true);
+    document.addEventListener('keypress', handleKeyPress, false);
   }, [searchStatus, setSearchStatus]);
 
   setBg();

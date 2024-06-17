@@ -142,7 +142,7 @@ function Search({ idx, setIdx, books, searchStatus, setSearchStatus, searchVal, 
       if (key == 'Escape' && searchStatus) {
         setSearchStatus(false);
         setSearchVal('');
-        setIdx(0);
+        setIdx(-1);
         e.preventDefault();
       }
 

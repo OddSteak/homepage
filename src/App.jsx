@@ -95,32 +95,65 @@ function Weather() {
   )
 }
 
-function SearchResults({ books, searchVal }) {
-  const buf = []
-
+function searchBooks({ books, searchVal }) {
   if (searchVal === '') return null
+
+  const buf = []
   for (let set of books) {
     for (let link of set.links) {
       const indexText = link.name + link.url
       const res = indexText.toLowerCase().indexOf(searchVal.toLowerCase())
       if (res != -1) {
-        buf.push(
-          <a key={link.url} href={link.url} className='link-box'>
-            {link.name}
-          </a>
-        )
+        buf.push(link);
       }
     }
   }
 
+  return buf;
+}
+
+function SearchResults({ books, searchVal }) {
+  const buf = searchBooks({ books, searchVal })
+  const res = []
+
+  if (buf == null) return null;
+  for (let l of buf) {
+    res.push(
+      <a key={l.url} href={l.url} className='link-box'>
+        {l.name}
+      </a>
+    )
+  }
+
   return (
     <div className="search-results">
-      {buf}
+      {res}
     </div>
   )
 }
 
-function Search({ searchStatus, searchVal, setSearchVal }) {
+function Search({ books, searchStatus, searchVal, setSearchVal }) {
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const key = e.code;
+      const res = searchBooks({books, searchVal})
+
+      if (key == 'Enter' && e.getModifierState('Control')) {
+        const searchUrl = "https://google.com/search?q=";
+        document.location.href = searchUrl + searchVal;
+      } else if (key == 'Enter' && searchStatus && res!== null && res.length !== 0) {
+        const resUrl = res[0].url;
+        document.location.href = resUrl;
+      } else if (key == 'Enter' && searchStatus && searchVal!=='') {
+        const searchUrl = "https://google.com/search?q=";
+        document.location.href = searchUrl + searchVal;
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown, false);
+  }, [searchStatus, searchVal]);
+
+
   if (searchStatus) {
     return (
       <div id="search">
@@ -147,7 +180,6 @@ function App() {
   useEffect(() => {
     const handleKeyDown = (e) => {
       const key = e.code;
-      const searchUrl = "https://google.com/search?q=";
 
       if (key == 'Space' && !searchStatus) {
         setSearchStatus(true);
@@ -156,8 +188,6 @@ function App() {
         setSearchStatus(false);
         setSearchVal('');
         e.preventDefault();
-      } else if (key == 'Enter' && searchStatus && searchVal !== '') {
-        document.location.href = searchUrl + searchVal
       }
     };
 
@@ -169,6 +199,7 @@ function App() {
   if (searchStatus) {
     return (
       <Search
+        books={bookmarks}
         searchStatus={searchStatus}
         searchVal={searchVal}
         setSearchVal={setSearchVal}

@@ -118,6 +118,15 @@ function SearchResults({ books, searchVal }) {
 
   if (buf == null) return null;
   for (let l of buf) {
+    if (res.length == 0) {
+      res.push(
+        <a style = {{ color: "#d4be98", backgroundColor: "#1d2021" }}
+          key={l.url} id={l.url} href={l.url} className='link-box'>
+          {l.name}
+        </a>
+      )
+      continue;
+    }
     res.push(
       <a key={l.url} id={l.url} href={l.url} className='link-box'>
         {l.name}
@@ -142,7 +151,7 @@ function Search({ idx, setIdx, books, searchStatus, setSearchStatus, searchVal, 
       if (key == 'Escape' && searchStatus) {
         setSearchStatus(false);
         setSearchVal('');
-        setIdx(-1);
+        setIdx(0);
         e.preventDefault();
       }
 
@@ -160,11 +169,11 @@ function Search({ idx, setIdx, books, searchStatus, setSearchStatus, searchVal, 
 
       if (key == 'ArrowDown') {
         if (res == null || res.length == 0) return;
-        if (idx !== -1) {
-          const el = document.getElementById(res[idx].url)
-          el.style.color = '#b3b3b3'
-          el.style.backgroundColor = '#2f2f2f'
-        }
+
+        const el = document.getElementById(res[idx].url)
+        el.style.color = '#b3b3b3'
+        el.style.backgroundColor = '#2f2f2f'
+
         if (idx !== res.length - 1) {
           setIdx((idx) => idx+1);
           const nextEl = document.getElementById(res[idx+1].url)
@@ -183,12 +192,12 @@ function Search({ idx, setIdx, books, searchStatus, setSearchStatus, searchVal, 
 
       if (key == 'ArrowUp') {
         if (res == null || res.length == 0) return;
-        if (idx !== -1) {
-          const el = document.getElementById(res[idx].url)
-          el.style.color = '#b3b3b3'
-          el.style.backgroundColor = '#2f2f2f'
-        }
-        if (idx !== 0 && idx !== -1) {
+
+        const el = document.getElementById(res[idx].url)
+        el.style.color = '#b3b3b3'
+        el.style.backgroundColor = '#2f2f2f'
+
+        if (idx !== 0) {
           setIdx((idx) => idx - 1);
           const nextEl = document.getElementById(res[idx-1].url)
           if (nextEl.getBoundingClientRect().y == 139.5) {
@@ -213,7 +222,7 @@ function Search({ idx, setIdx, books, searchStatus, setSearchStatus, searchVal, 
 
   useEffect(() => {
     const res = searchBooks({ books, searchVal })
-    if (idx !== -1 && res !== null && res.length !== 0) {
+    if (res !== null && res.length !== 0) {
       const el = document.getElementById(res[idx].url)
       el.style.color = '#d4be98'
       el.style.backgroundColor = '#1d2021'
@@ -230,7 +239,10 @@ function Search({ idx, setIdx, books, searchStatus, setSearchStatus, searchVal, 
           value={searchVal}
           type="text"
           name="search-field"
-          onChange={(e) => setSearchVal(e.target.value)}
+          onChange={(e) => {
+            setSearchVal(e.target.value);
+            setIdx(0);
+          }}
         />
         <SearchResults books={bookmarks} searchVal={searchVal} />
       </div>
@@ -243,7 +255,7 @@ function Search({ idx, setIdx, books, searchStatus, setSearchStatus, searchVal, 
 function App() {
   const [searchStatus, setSearchStatus] = useState(false)
   const [searchVal, setSearchVal] = useState('');
-  const [idx, setIdx] = useState(-1);
+  const [idx, setIdx] = useState(0);
 
   useEffect(() => {
     const handleKeyDown = (e) => {

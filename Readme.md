@@ -1,6 +1,6 @@
 # Demo
 
-![demo](http://sedentaryowl.xyz/homepage)
+[demo](http://sedentaryowl.xyz/homepage)
 
 # Keybindings
 

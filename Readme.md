@@ -1,6 +1,6 @@
 # Demo
 
-[![demo](https://raw.githubusercontent.com/OddSteak/homepage/main/demo.mp4)]
+![demo](http://sedentaryowl.xyz/homepage)
 
 # Keybindings
 

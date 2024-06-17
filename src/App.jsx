@@ -119,7 +119,7 @@ function SearchResults({ books, searchVal }) {
   if (buf == null) return null;
   for (let l of buf) {
     res.push(
-      <a key={l.url} href={l.url} className='link-box'>
+      <a key={l.url} id={l.url} href={l.url} className='link-box'>
         {l.name}
       </a>
     )
@@ -132,26 +132,73 @@ function SearchResults({ books, searchVal }) {
   )
 }
 
-function Search({ books, searchStatus, searchVal, setSearchVal }) {
+function Search({ idx, setIdx, books, searchStatus, setSearchStatus, searchVal, setSearchVal }) {
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       const key = e.code;
-      const res = searchBooks({books, searchVal})
+      const res = searchBooks({ books, searchVal })
 
-      if (key == 'Enter' && e.getModifierState('Control')) {
-        const searchUrl = "https://google.com/search?q=";
-        document.location.href = searchUrl + searchVal;
-      } else if (key == 'Enter' && searchStatus && res!== null && res.length !== 0) {
-        const resUrl = res[0].url;
-        document.location.href = resUrl;
-      } else if (key == 'Enter' && searchStatus && searchVal!=='') {
-        const searchUrl = "https://google.com/search?q=";
-        document.location.href = searchUrl + searchVal;
+      if (key == 'Escape' && searchStatus) {
+        setSearchStatus(false);
+        setSearchVal('');
+        setIdx(0);
+        e.preventDefault();
+      }
+
+      if (key == 'Enter') {
+        if (searchStatus &&
+          !e.getModifierState('Control') &&
+          res !== null && res.length !== 0) {
+          const resUrl = res[idx].url;
+          document.location.href = resUrl;
+        } else if (searchStatus && searchVal !== '') {
+          const searchUrl = "https://google.com/search?q=";
+          document.location.href = searchUrl + searchVal;
+        }
+      }
+
+      if (key == 'ArrowDown') {
+        if (res == null || res.length == 0) return;
+        if (idx !== -1) {
+          const el = document.getElementById(res[idx].url)
+          el.style.color = '#b3b3b3'
+          el.style.backgroundColor = '#2f2f2f'
+        }
+        if (idx !== res.length - 1) {
+          setIdx((idx) => idx+1);
+        } else setIdx(0);
+        e.preventDefault();
+      }
+
+      if (key == 'ArrowUp') {
+        if (res == null || res.length == 0) return;
+        if (idx !== -1) {
+          const el = document.getElementById(res[idx].url)
+          el.style.color = '#b3b3b3'
+          el.style.backgroundColor = '#2f2f2f'
+        }
+        if (idx !== 0 && idx !== -1) setIdx((idx) => idx - 1);
+        else setIdx(res.length - 1);
+        e.preventDefault();
       }
     };
 
     document.addEventListener('keydown', handleKeyDown, false);
-  }, [searchStatus, searchVal]);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown, false);
+    }
+  }, [searchStatus, searchVal, idx]);
+
+  useEffect(() => {
+    const res = searchBooks({ books, searchVal })
+    if (idx !== -1 && res !== null && res.length !== 0) {
+      const el = document.getElementById(res[idx].url)
+      el.style.color = '#d4be98'
+      el.style.backgroundColor = '#1d2021'
+    }
+  }, [idx])
 
 
   if (searchStatus) {
@@ -176,6 +223,7 @@ function Search({ books, searchStatus, searchVal, setSearchVal }) {
 function App() {
   const [searchStatus, setSearchStatus] = useState(false)
   const [searchVal, setSearchVal] = useState('');
+  const [idx, setIdx] = useState(-1);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -183,10 +231,6 @@ function App() {
 
       if (key == 'Space' && !searchStatus) {
         setSearchStatus(true);
-        e.preventDefault();
-      } else if (key == 'Escape' && searchStatus) {
-        setSearchStatus(false);
-        setSearchVal('');
         e.preventDefault();
       }
     };
@@ -199,8 +243,11 @@ function App() {
   if (searchStatus) {
     return (
       <Search
+        idx={idx}
+        setIdx={setIdx}
         books={bookmarks}
         searchStatus={searchStatus}
+        setSearchStatus={setSearchStatus}
         searchVal={searchVal}
         setSearchVal={setSearchVal}
       />

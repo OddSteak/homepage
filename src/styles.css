@@ -78,15 +78,15 @@ body {
 }
 
 .search-results {
-  margin-top: 5em;
+  margin-top: 80px;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 50%;
-  height: 21em;
+  height: 371px;
   overflow-y: scroll;
   scrollbar-width: none;
-  gap: 20px;
+  gap: 0px;
 }
 
 .link-box {

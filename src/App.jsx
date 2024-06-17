@@ -167,7 +167,17 @@ function Search({ idx, setIdx, books, searchStatus, setSearchStatus, searchVal, 
         }
         if (idx !== res.length - 1) {
           setIdx((idx) => idx+1);
-        } else setIdx(0);
+          const nextEl = document.getElementById(res[idx+1].url)
+          if (nextEl.getBoundingClientRect().bottom == 616.5) {
+            nextEl.scrollIntoView(false)
+          }
+        } else {
+          const nextEl = document.getElementById(res[0].url)
+          nextEl.scrollIntoView()
+          setIdx(0);
+        }
+
+
         e.preventDefault();
       }
 
@@ -178,8 +188,18 @@ function Search({ idx, setIdx, books, searchStatus, setSearchStatus, searchVal, 
           el.style.color = '#b3b3b3'
           el.style.backgroundColor = '#2f2f2f'
         }
-        if (idx !== 0 && idx !== -1) setIdx((idx) => idx - 1);
-        else setIdx(res.length - 1);
+        if (idx !== 0 && idx !== -1) {
+          setIdx((idx) => idx - 1);
+          const nextEl = document.getElementById(res[idx-1].url)
+          if (nextEl.getBoundingClientRect().y == 139.5) {
+            nextEl.scrollIntoView()
+          }
+        }
+        else {
+          setIdx(res.length - 1);
+          const nextEl = document.getElementById(res[res.length-1].url)
+          nextEl.scrollIntoView()
+        }
         e.preventDefault();
       }
     };

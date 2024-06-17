@@ -98,46 +98,29 @@ function Weather() {
 function SearchResults({ books, searchVal }) {
   const buf = []
 
+  if (searchVal === '') return null
   for (let set of books) {
     for (let link of set.links) {
       const indexText = link.name + link.url
       const res = indexText.toLowerCase().indexOf(searchVal.toLowerCase())
       if (res != -1) {
         buf.push(
-          <li key={link.url} id="links">
-            <a href={link.url}>{link.name}</a>
-          </li>
+          <a key={link.url} href={link.url} className='link-box'>
+            {link.name}
+          </a>
         )
       }
     }
   }
 
   return (
-    <ol className="search-results">
+    <div className="search-results">
       {buf}
-    </ol>
+    </div>
   )
 }
 
-function Search({ searchStatus, setSearchStatus }) {
-  const [searchVal, setSearchVal] = useState('');
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      const key = e.code;
-      const searchUrl = "https://google.com/search?q=";
-
-      if (key == 'Escape' && searchStatus) {
-        setSearchStatus(false);
-        setSearchVal('');
-      } else if (key == 'Enter' && searchStatus && searchVal !== '') {
-        document.location.href = searchUrl + searchVal
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown, false);
-  }, [searchStatus, setSearchStatus, searchVal, setSearchVal]);
-
+function Search({ searchStatus, searchVal, setSearchVal }) {
   if (searchStatus) {
     return (
       <div id="search">
@@ -147,10 +130,6 @@ function Search({ searchStatus, setSearchStatus }) {
           value={searchVal}
           type="text"
           name="search-field"
-          onBlur={() => {
-            setSearchStatus(false);
-            setSearchVal('');
-          }}
           onChange={(e) => setSearchVal(e.target.value)}
         />
         <SearchResults books={bookmarks} searchVal={searchVal} />
@@ -163,18 +142,27 @@ function Search({ searchStatus, setSearchStatus }) {
 
 function App() {
   const [searchStatus, setSearchStatus] = useState(false)
+  const [searchVal, setSearchVal] = useState('');
 
   useEffect(() => {
-    const handleKeyPress = (e) => {
+    const handleKeyDown = (e) => {
       const key = e.code;
+      const searchUrl = "https://google.com/search?q=";
+
       if (key == 'Space' && !searchStatus) {
         setSearchStatus(true);
         e.preventDefault();
+      } else if (key == 'Escape' && searchStatus) {
+        setSearchStatus(false);
+        setSearchVal('');
+        e.preventDefault();
+      } else if (key == 'Enter' && searchStatus && searchVal !== '') {
+        document.location.href = searchUrl + searchVal
       }
     };
 
-    document.addEventListener('keypress', handleKeyPress, false);
-  }, [searchStatus, setSearchStatus]);
+    document.addEventListener('keydown', handleKeyDown, false);
+  }, [searchStatus, setSearchStatus, searchVal, setSearchVal]);
 
   setBg();
 
@@ -182,17 +170,18 @@ function App() {
     return (
       <Search
         searchStatus={searchStatus}
-        setSearchStatus={setSearchStatus}
+        searchVal={searchVal}
+        setSearchVal={setSearchVal}
       />
     )
   }
 
   return (
-    <>
+    <div className="container">
       <Clock />
       <Weather />
       <BookmarksContainer bookmarks={bookmarks} />
-    </>
+    </div>
   )
 }
 

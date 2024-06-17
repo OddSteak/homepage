@@ -21,29 +21,10 @@ body {
   /* Make sure #root takes up the whole space */
   width: 100%;
   height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-/*
-.container {
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-*/
-
-#clock {
-  font-family: sans-serif;
-  font-size: 3.5rem;
-  font-weight: 600;
-  font-family: var(--fontFamily);
-  color: #d4be98;
-  margin-bottom: 0.25em;
+  /* display: flex; */
+  /* justify-content: center; */
+  /* align-items: center; */
+  /* flex-direction: column; */
 }
 
 #search {
@@ -55,15 +36,35 @@ body {
   box-sizing: border-box;
   flex-direction: column;
   align-items: center;
-  justify-content: top;
+  justify-content: center;
+}
+
+.container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#clock {
+  font-family: sans-serif;
+  font-size: 3.5rem;
+  font-weight: 600;
+  font-family: var(--fontFamily);
+  color: #d4be98;
+  margin-bottom: 0.25em;
 }
 
 #search-field {
-  position: absolute;
-  width: 40%;
+  position: fixed;
+  width: 50%;
   height: 55px;
+  /* margin-top: 20%; */
+  /* margin-bottom: 1em; */
   top: 20%;
-  left: 30%;
+  left: 25%;
   border-radius: 10px;
   padding: 0.75em 1em;
   box-sizing: border-box;
@@ -73,8 +74,41 @@ body {
   font-size: 1.5rem;
   color: var(--secondaryFg);
   outline: none;
-  margin-bottom: 1em;
   text-align: center;
+}
+
+.search-results {
+  margin-top: 5em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 50%;
+  height: 21em;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  gap: 20px;
+}
+
+.link-box {
+  background-color: var(--searchBg);
+  text-decoration: inherit;
+  border-radius: 10px;
+  box-sizing: border-box;
+  width: 100%;
+  /* display: inline-block; */
+  padding: 10px;
+  background-color: #2f2f2f;
+  border: 1px solid var(--searchBg);
+  font-family: var(--fontFamily);
+  font-size: 1.5rem;
+  color: var(--secondaryFg);
+  outline: none;
+  text-align: center;
+}
+
+.link-box:hover {
+  color: #d4be98;
+  background-color: #1d2021;
 }
 
 .weather-container {
@@ -86,6 +120,14 @@ body {
   font-family: var(--fontFamily);
   color: var(--fg);
   text-align: center;
+}
+
+#weather-description {
+  padding-right: 0.3em
+}
+
+#temp {
+  padding-left: 0.3em
 }
 
 .inline {
@@ -102,13 +144,13 @@ body {
 }
 
 @media only screen and (max-width: 960px) {
-  #root {
+  .container {
     height: auto;
   }
   #clock {
     margin-top: 1em;
   }
-  #root > #bookmark-container {
+  .container > #bookmark-container {
     flex-direction: column;
     width: 60%;
   }

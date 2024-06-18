@@ -112,8 +112,7 @@ function searchBooks({ books, searchVal }) {
   return buf;
 }
 
-function SearchResults({ books, searchVal }) {
-  const buf = searchBooks({ books, searchVal })
+function SearchResults({ buf }) {
   const res = []
 
   if (buf == null) return null;
@@ -143,11 +142,11 @@ function SearchResults({ books, searchVal }) {
 
 function Search({ idx, setIdx, books, searchStatus, setSearchStatus, searchVal, setSearchVal }) {
 
+  const res = searchBooks({ books, searchVal })
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       const key = e.code;
-      const res = searchBooks({ books, searchVal })
-
       if (key == 'Escape' && searchStatus) {
         setSearchStatus(false);
         setSearchVal('');
@@ -167,7 +166,7 @@ function Search({ idx, setIdx, books, searchStatus, setSearchStatus, searchVal, 
         }
       }
 
-      if (key == 'ArrowDown') {
+      if (key === 'ArrowDown' || key === 'j') {
         if (res == null || res.length == 0) return;
 
         const el = document.getElementById(res[idx].url)
@@ -186,11 +185,10 @@ function Search({ idx, setIdx, books, searchStatus, setSearchStatus, searchVal, 
           setIdx(0);
         }
 
-
         e.preventDefault();
       }
 
-      if (key == 'ArrowUp') {
+      if (key === 'ArrowUp' || key === 'k') {
         if (res == null || res.length == 0) return;
 
         const el = document.getElementById(res[idx].url)
@@ -221,7 +219,6 @@ function Search({ idx, setIdx, books, searchStatus, setSearchStatus, searchVal, 
   }, [searchStatus, searchVal, idx]);
 
   useEffect(() => {
-    const res = searchBooks({ books, searchVal })
     if (res !== null && res.length !== 0) {
       const el = document.getElementById(res[idx].url)
       el.style.color = '#d4be98'
@@ -244,7 +241,7 @@ function Search({ idx, setIdx, books, searchStatus, setSearchStatus, searchVal, 
             setIdx(0);
           }}
         />
-        <SearchResults books={bookmarks} searchVal={searchVal} />
+        <SearchResults buf={res} />
       </div>
     )
   }

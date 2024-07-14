@@ -115,11 +115,11 @@ function searchBooks({ books, searchVal }) {
 function SearchResults({ buf }) {
   const res = []
 
-  if (buf == null) return null;
+  if (buf === null) return null;
   for (let l of buf) {
-    if (res.length == 0) {
+    if (res.length === 0) {
       res.push(
-        <a style = {{ color: "#d4be98", backgroundColor: "#1d2021" }}
+        <a style={{ color: "#d4be98", backgroundColor: "#1d2021" }}
           key={l.url} id={l.url} href={l.url} className='link-box'>
           {l.name}
         </a>
@@ -147,19 +147,24 @@ function Search({ idx, setIdx, books, searchStatus, setSearchStatus, searchVal, 
   useEffect(() => {
     const handleKeyDown = (e) => {
       const key = e.code;
-      if (key == 'Escape' && searchStatus) {
+
+      if (key === 'Escape' && searchStatus) {
         setSearchStatus(false);
         setSearchVal('');
         setIdx(0);
         e.preventDefault();
       }
 
-      if (key == 'Enter') {
+      if (key === 'Enter') {
         if (searchStatus &&
           !e.getModifierState('Control') &&
           res !== null && res.length !== 0) {
-          const resUrl = res[idx].url;
-          document.location.href = resUrl;
+
+          document.location.href = res[idx].url;
+
+        } else if (searchStatus && searchVal.slice(0, 3) === "yt ") {
+          const searchUrl = "https://www.youtube.com/results?search_query=";
+          document.location.href = searchUrl + searchVal;
         } else if (searchStatus && searchVal !== '') {
           const searchUrl = "https://google.com/search?q=";
           document.location.href = searchUrl + searchVal;
@@ -167,16 +172,16 @@ function Search({ idx, setIdx, books, searchStatus, setSearchStatus, searchVal, 
       }
 
       if (key === 'ArrowDown' || key === 'j') {
-        if (res == null || res.length == 0) return;
+        if (res === null || res.length === 0) return;
 
         const el = document.getElementById(res[idx].url)
         el.style.color = '#b3b3b3'
         el.style.backgroundColor = '#2f2f2f'
 
         if (idx !== res.length - 1) {
-          setIdx((idx) => idx+1);
-          const nextEl = document.getElementById(res[idx+1].url)
-          if (nextEl.getBoundingClientRect().bottom == 616.5) {
+          setIdx((idx) => idx + 1);
+          const nextEl = document.getElementById(res[idx + 1].url)
+          if (nextEl.getBoundingClientRect().bottom === 616.5) {
             nextEl.scrollIntoView(false)
           }
         } else {
@@ -189,7 +194,7 @@ function Search({ idx, setIdx, books, searchStatus, setSearchStatus, searchVal, 
       }
 
       if (key === 'ArrowUp' || key === 'k') {
-        if (res == null || res.length == 0) return;
+        if (res === null || res.length === 0) return;
 
         const el = document.getElementById(res[idx].url)
         el.style.color = '#b3b3b3'
@@ -197,14 +202,14 @@ function Search({ idx, setIdx, books, searchStatus, setSearchStatus, searchVal, 
 
         if (idx !== 0) {
           setIdx((idx) => idx - 1);
-          const nextEl = document.getElementById(res[idx-1].url)
-          if (nextEl.getBoundingClientRect().y == 139.5) {
+          const nextEl = document.getElementById(res[idx - 1].url)
+          if (nextEl.getBoundingClientRect().y === 139.5) {
             nextEl.scrollIntoView()
           }
         }
         else {
           setIdx(res.length - 1);
-          const nextEl = document.getElementById(res[res.length-1].url)
+          const nextEl = document.getElementById(res[res.length - 1].url)
           nextEl.scrollIntoView()
         }
         e.preventDefault();
@@ -225,7 +230,6 @@ function Search({ idx, setIdx, books, searchStatus, setSearchStatus, searchVal, 
       el.style.backgroundColor = '#1d2021'
     }
   }, [idx])
-
 
   if (searchStatus) {
     return (
@@ -258,7 +262,7 @@ function App() {
     const handleKeyDown = (e) => {
       const key = e.code;
 
-      if (key == 'Space' && !searchStatus) {
+      if (key === 'Space' && !searchStatus) {
         setSearchStatus(true);
         e.preventDefault();
       }
